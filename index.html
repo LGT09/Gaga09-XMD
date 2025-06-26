@@ -1,0 +1,64 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Gaga09 XMD Bot Pairing</title>
+  <style>
+    body {
+      background: #000;
+      color: #0f0;
+      font-family: monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 3rem;
+    }
+    input {
+      padding: 0.5rem;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      width: 250px;
+      border-radius: 6px;
+      border: 1px solid #0f0;
+      background: #111;
+      color: #0f0;
+    }
+    .qr-box {
+      background: #111;
+      padding: 1rem;
+      border: 1px dashed #0f0;
+      margin: 1rem 0;
+    }
+    footer {
+      margin-top: 2rem;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔗 Gaga09 XMD Bot QR Pairing</h1>
+  <input type="text" placeholder="Enter your number to link" />
+  <div class="qr-box">
+    <pre id="qrText">Waiting for QR...</pre>
+  </div>
+  <footer>
+    Best Ai service by Traxxion09<br>
+    Created by Lil Gaga Traxx09 ©️ 2025 — Gaga is the King
+  </footer>
+  <script>
+    async function fetchQR() {
+      try {
+        const res = await fetch("/qr");
+        if (!res.ok) return;
+        const qr = await res.text();
+        document.getElementById("qrText").textContent = qr;
+      } catch (e) {
+        document.getElementById("qrText").textContent = "Error loading QR.";
+      }
+    }
+    setInterval(fetchQR, 3000);
+    fetchQR();
+  </script>
+</body>
+</html>

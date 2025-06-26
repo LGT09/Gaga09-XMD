@@ -1,39 +1,69 @@
 const { default: makeWASocket, useMultiFileAuthState } = require("@whiskeysockets/baileys");
-const qrcode = require("qrcode-terminal");
-const { handleCommand } = require("./lib/commands");
-const { OWNER_NUMBER } = require("./config");
+const {
+  default: makeWASocket,
+  useMultiFileAuthState,
+  fetchLatestBaileysVersion
+} = require("@whiskeysockets/baileys");
+const fs = require("fs");
+const path = require("path");
+require("dotenv").config();
 
-async function startBot() {
-  const { state, saveCreds } = await useMultiFileAuthState("session");
+const { handleCommand } = require("./lib/commands");
+
+// Ensure session folder exists
+if (!fs.existsSync("./auth")) fs.mkdirSync("./auth", { recursive: true });
+if (!fs.existsSync("./public")) fs.mkdirSync("./public", { recursive: true });
+
+async function startSock() {
+  const { state, saveCreds } = await useMultiFileAuthState("./auth");
+  const { version } = await fetchLatestBaileysVersion();
 
   const sock = makeWASocket({
+    version,
+    printQRInTerminal: true,
     auth: state,
-    printQRInTerminal: false,
-    browser: ["Gaga09 XMD", "Chrome", "121.0.0.1"]
+    browser: ["Gaga09 XMD", "Chrome", "106.0.0.0"]
   });
 
-  sock.ev.on("connection.update", update => {
-    const { connection, qr } = update;
+  // Save credentials to file
+  sock.ev.on("creds.update", (creds) => {
+    saveCreds();
+    fs.writeFileSync(
+      path.join(__dirname, "public", "session.json"),
+      JSON.stringify(creds, null, 2)
+    );
+  });
+
+  // Write QR code to file for live pairing page
+  sock.ev.on("connection.update", ({ qr }) => {
     if (qr) {
-      qrcode.generate(qr, { small: true });
-      console.log("🔗 Scan QR with WhatsApp...");
-    }
-    if (connection === "open") {
-      console.log("✅ Connected as Gaga09 XMD");
+      fs.writeFileSync(path.join(__dirname, "public", "latest-qr.txt"), qr);
+      console.log("📲 Scan the QR code to connect!");
     }
   });
 
-  sock.ev.on("creds.update", saveCreds);
-
+  // Listen for messages
   sock.ev.on("messages.upsert", async ({ messages }) => {
     const msg = messages[0];
-    if (!msg.message || msg.key.fromMe) return;
+    if (!msg.message || msg.key?.remoteJid === "status@broadcast") return;
 
-    const content = msg.message.conversation || msg.message.extendedTextMessage?.text;
-    if (!content) return;
+    const type = Object.keys(msg.message)[0];
+    const text = type === "conversation"
+      ? msg.message.conversation
+      : type === "extendedTextMessage"
+      ? msg.message.extendedTextMessage.text
+      : "";
 
-    await handleCommand(sock, msg, content.trim(), OWNER_NUMBER);
+    const OWNER = (process.env.OWNER_NUMBER || "") + "@s.whatsapp.net";
+
+    try {
+      await handleCommand(sock, msg, text, OWNER);
+    } catch (err) {
+      console.error("❌ Command error:", err);
+    }
   });
+
+  console.log("✅ Gaga09 XMD Bot is ready!");
 }
 
-startBot();
+startSock();

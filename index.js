@@ -1,68 +1,55 @@
-const {
-  default: makeWASocket,
-  useMultiFileAuthState,
-  fetchLatestBaileysVersion
-} = require("@whiskeysockets/baileys");
+
+const { default: makeWASocket, useSingleFileAuthState } = require("@whiskeysockets/baileys");
+const { Boom } = require("@hapi/boom");
 const fs = require("fs");
-const path = require("path");
-require("dotenv").config();
+const chalk = require("chalk");
 
-const { handleCommand } = require("./lib/commands");
+const { state, saveState } = useSingleFileAuthState("./session.json");
 
-// Ensure session folder exists
-if (!fs.existsSync("./auth")) fs.mkdirSync("./auth", { recursive: true });
-if (!fs.existsSync("./public")) fs.mkdirSync("./public", { recursive: true });
-
-async function startSock() {
-  const { state, saveCreds } = await useMultiFileAuthState("./auth");
-  const { version } = await fetchLatestBaileysVersion();
-
+async function startBot() {
   const sock = makeWASocket({
-    version,
-    printQRInTerminal: true,
     auth: state,
-    browser: ["Gaga09 XMD", "Chrome", "106.0.0.0"]
+    printQRInTerminal: true,
   });
 
-  // Save credentials to file
-  sock.ev.on("creds.update", (creds) => {
-    saveCreds();
-    fs.writeFileSync(
-      path.join(__dirname, "public", "session.json"),
-      JSON.stringify(creds, null, 2)
-    );
-  });
+  sock.ev.on("creds.update", saveState);
 
-  // Write QR code to file for live pairing page
-  sock.ev.on("connection.update", ({ qr }) => {
-    if (qr) {
-      fs.writeFileSync(path.join(__dirname, "public", "latest-qr.txt"), qr);
-      console.log("📲 Scan the QR code to connect!");
+  sock.ev.on("messages.upsert", async ({ messages, type }) => {
+    const m = messages[0];
+    if (!m.message) return;
+
+    const sender = m.key.remoteJid;
+    const msgType = Object.keys(m.message)[0];
+    const text = m.message.conversation || m.message[msgType]?.text;
+
+    if (!text) return;
+
+    console.log(chalk.green(`📥 Message from ${sender}: ${text}`));
+
+    // Example commands
+    if (text === "hi" || text === "Hi") {
+      await sock.sendMessage(sender, { text: "👋 Hello! I am your Baileys bot." });
+    }
+
+    if (text === ".menu") {
+      await sock.sendMessage(sender, {
+        text: `✨ *Gaga09 XMD Menu*\n\n1. .play\n2. .sticker\n3. .ban\n4. .help\n\nCreated by *Lil Gaga Traxx09*`,
+      });
     }
   });
 
-  // Listen for messages
-  sock.ev.on("messages.upsert", async ({ messages }) => {
-    const msg = messages[0];
-    if (!msg.message || msg.key?.remoteJid === "status@broadcast") return;
-
-    const type = Object.keys(msg.message)[0];
-    const text = type === "conversation"
-      ? msg.message.conversation
-      : type === "extendedTextMessage"
-      ? msg.message.extendedTextMessage.text
-      : "";
-
-    const OWNER = (process.env.OWNER_NUMBER || "") + "@s.whatsapp.net";
-
-    try {
-      await handleCommand(sock, msg, text, OWNER);
-    } catch (err) {
-      console.error("❌ Command error:", err);
+  sock.ev.on("connection.update", (update) => {
+    const { connection, lastDisconnect } = update;
+    if (connection === "close") {
+      const shouldReconnect = lastDisconnect?.error?.output?.statusCode !== DisconnectReason.loggedOut;
+      console.log("Connection closed. Reconnecting...", shouldReconnect);
+      if (shouldReconnect) startBot();
+    } else if (connection === "open") {
+      console.log("✅ Connected to WhatsApp!");
     }
   });
-
-  console.log("✅ Gaga09 XMD Bot is ready!");
 }
 
-startSock();
+startBot();
+
+

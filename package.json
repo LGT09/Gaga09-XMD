@@ -1,52 +1,27 @@
 {
-  "name": "gaga-ai-nexus",
-  "version": "4.3.0",
-  "description": "Generative Adaptive Graph-Agnostic Neural Engine - Advanced WhatsApp AI Bot by Traxxion Tech",
+  "name": "telexwp-base",
+  "version": "1.0.0",
+  "description": "Advanced WhatsApp Bot Base with Telegram Pairing",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js",
-    "vercel-build": "npm install",
-    "render-build": "npm install",
-    "heroku-postbuild": "npm install"
+    "dev": "nodemon index.js"
   },
   "keywords": [
-    "whatsapp-bot",
-    "ai-bot",
-    "gaga-ai",
-    "traxxion-tech",
+    "whatsapp",
     "baileys",
-    "whatsapp"
+    "bot",
+    "telegram",
+    "pairing"
   ],
-  "author": "Vincent Ganiza (Traxxion Tech)",
+  "author": "Silent Tech",
   "license": "MIT",
   "dependencies": {
-    "@distube/ytdl-core": "^4.13.5",
-    "@octokit/rest": "^20.0.2",
-    "@whiskeysockets/baileys": "^6.6.0",
-    "axios": "^1.6.2",
-    "chalk": "^4.1.2",
-    "cheerio": "^1.0.0-rc.12",
-    "crypto": "^1.0.1",
-    "express": "^4.18.2",
-    "fluent-ffmpeg": "^2.1.2",
-    "form-data": "^4.0.0",
+    "@whiskeysockets/baileys": "latest",
+    "axios": "^1.6.7",
     "fs-extra": "^11.2.0",
-    "megajs": "^1.1.2",
-    "moment-timezone": "^0.5.43",
-    "mumaker": "^1.0.2",
-    "node-cron": "^3.0.3",
-    "openai": "^4.20.1",
-    "pino": "^8.17.2",
-    "qrcode": "^1.5.3",
-    "yt-dlp-exec": "^2.2.4",
-    "yt-search": "^2.10.4"
-  },
-  "devDependencies": {
-    "nodemon": "^3.0.1"
-  },
-  "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=9.0.0"
+    "node-telegram-bot-api": "^0.64.0",
+    "pino": "^8.19.0",
+    "qrcode": "^1.5.3"
   }
 }

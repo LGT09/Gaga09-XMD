@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GAGA AI Nexus - Traxxion Tech</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: url('https://files.catbox.moe/6khvmr.jpg') no-repeat center center/cover;
+            backdrop-filter: brightness(0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .orbit-container {
+            position: relative;
+            width: 320px;
+            height: 320px;
+            margin: 0 auto 2rem;
+        }
+
+        .orbit-ring {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            animation: rotate 20s linear infinite;
+        }
+
+        .orbit-ring::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            width: 16px;
+            height: 16px;
+            background: #0ff;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
+            transform: translateX(-50%);
+        }
+
+        .orbit-ring:nth-child(2) {
+            width: 80%;
+            height: 80%;
+            top: 10%;
+            left: 10%;
+            border-color: rgba(255, 255, 255, 0.3);
+            animation-duration: 12s;
+            animation-direction: reverse;
+        }
+
+        .orbit-ring:nth-child(3) {
+            width: 60%;
+            height: 60%;
+            top: 20%;
+            left: 20%;
+            border-color: rgba(255, 255, 255, 0.4);
+            animation-duration: 8s;
+        }
+
+        .logo {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 100px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: bold;
+            backdrop-filter: blur(4px);
+            color: white;
+            text-shadow: 0 0 10px cyan;
+            z-index: 10;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .card {
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(12px);
+            border-radius: 2rem;
+            padding: 2rem;
+            width: 100%;
+            max-width: 520px;
+            text-align: center;
+            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #fff, #88f7ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .sub {
+            color: #ccc;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            letter-spacing: 1px;
+        }
+
+        .creator {
+            color: #0ff;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+
+        .btn {
+            display: inline-block;
+            background: linear-gradient(45deg, #0a58ca, #0dcaf0);
+            padding: 12px 28px;
+            border-radius: 40px;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin: 0.5rem;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .contact-section {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .contact-title {
+            color: #88f7ff;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .contact-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .contact-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .contact-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.02);
+        }
+
+        .contact-item a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .contact-item i {
+            font-style: normal;
+            font-size: 1.1rem;
+        }
+
+        .footer {
+            margin-top: 1.5rem;
+            font-size: 0.7rem;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="orbit-container">
+            <div class="orbit-ring"></div>
+            <div class="orbit-ring"></div>
+            <div class="orbit-ring"></div>
+            <div class="logo">⚡</div>
+        </div>
+        <h1>GAGA AI Nexus</h1>
+        <div class="sub">Generative Adaptive Graph‑Agnostic Neural Engine</div>
+        <div class="creator">✨ Created by <strong style="color: #0ff;">Vincent Ganiza</strong> (Traxxion Tech) ✨</div>
+        <p style="color: #ddd; margin-bottom: 1.5rem; font-size: 0.9rem;">
+            The most advanced WhatsApp AI assistant — intelligent, fast, and always evolving.
+        </p>
+        <a href="/pair" class="btn">🔗 Pair New Device</a>
+        <a href="https://github.com/LGT09/GAGA-MD-Mini" target="_blank" class="btn btn-secondary">📂 GitHub</a>
+        
+        <div class="contact-section">
+            <div class="contact-title">📞 Connect with Traxxion Tech</div>
+            <div class="contact-grid">
+                <div class="contact-item">
+                    <i>📱</i> <a href="https://wa.me/263716857999" target="_blank">WhatsApp</a>
+                </div>
+                <div class="contact-item">
+                    <i>📞</i> <a href="tel:+263780078177">Call: +263 78 007 8177</a>
+                </div>
+                <div class="contact-item">
+                    <i>📘</i> <a href="https://facebook.com/TraxxionTech" target="_blank">Facebook</a>
+                </div>
+                <div class="contact-item">
+                    <i>💬</i> <a href="https://t.me/xaphnathpanior" target="_blank">Telegram</a>
+                </div>
+                <div class="contact-item">
+                    <i>📧</i> <a href="mailto:traxxiontech@gmail.com">Email</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            v4.3.0 • Always active • AI & Voice ready
+        </div>
+    </div>
+</body>
+</html>

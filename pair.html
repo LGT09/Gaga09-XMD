@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pair Device - GAGA AI Nexus</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: url('https://files.catbox.moe/6khvmr.jpg') no-repeat center center/cover;
+            backdrop-filter: brightness(0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .card {
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(12px);
+            border-radius: 2rem;
+            padding: 2rem;
+            width: 100%;
+            max-width: 480px;
+            text-align: center;
+            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, #fff, #88f7ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .sub {
+            color: #ccc;
+            font-size: 0.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group {
+            margin: 1.5rem 0;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 60px;
+            font-size: 1rem;
+            color: white;
+            outline: none;
+            transition: 0.2s;
+            text-align: center;
+        }
+
+        input:focus {
+            border-color: cyan;
+            box-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #0a58ca, #0dcaf0);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 40px;
+            color: white;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            transform: none;
+            cursor: not-allowed;
+        }
+
+        .code-box {
+            margin-top: 1.8rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 1rem;
+            border-left: 4px solid cyan;
+            font-family: monospace;
+            font-size: 1.6rem;
+            font-weight: bold;
+            letter-spacing: 4px;
+            word-break: break-all;
+            color: #0ff;
+            display: none;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.6s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .back-link {
+            margin-top: 1.5rem;
+            display: inline-block;
+            color: #aaa;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .back-link:hover {
+            color: white;
+        }
+
+        .error {
+            color: #ff7b7b;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .info {
+            color: #88f7ff;
+            font-size: 0.8rem;
+            margin-top: 1rem;
+        }
+
+        .contact-info {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.7rem;
+            color: #aaa;
+        }
+
+        .contact-info a {
+            color: #88f7ff;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>🔗 Pair WhatsApp</h1>
+        <div class="sub">Enter your phone number to receive a pairing code</div>
+        
+        <div class="input-group">
+            <input type="tel" id="phone" placeholder="e.g., 263716857999" autocomplete="off">
+        </div>
+        
+        <button id="pairBtn" class="btn">Get Pairing Code</button>
+        
+        <div id="result" class="code-box"></div>
+        <div id="errorMsg" class="error"></div>
+        
+        <div class="info">
+            💡 Make sure WhatsApp is installed and your number is active
+        </div>
+        
+        <a href="/" class="back-link">← Back to main page</a>
+        
+        <div class="contact-info">
+            📱 Need help? Contact <strong>Vincent Ganiza</strong> (Traxxion Tech)<br>
+            <a href="https://wa.me/263716857999">WhatsApp: +263 71 685 7999</a> | 
+            <a href="https://t.me/xaphnathpanior">Telegram: @xaphnathpanior</a> | 
+            <a href="mailto:traxxiontech@gmail.com">Email: traxxiontech@gmail.com</a>
+        </div>
+    </div>
+
+    <script>
+        const phoneInput = document.getElementById('phone');
+        const pairBtn = document.getElementById('pairBtn');
+        const resultDiv = document.getElementById('result');
+        const errorDiv = document.getElementById('errorMsg');
+
+        pairBtn.addEventListener('click', async () => {
+            let number = phoneInput.value.trim();
+            if (!number) {
+                errorDiv.textContent = 'Please enter your phone number.';
+                return;
+            }
+            // Remove any non-digit except leading '+'
+            number = number.replace(/[^\d+]/g, '');
+            // Remove leading '+' if present for clean number
+            const cleanNumber = number.replace(/^\+/, '');
+            if (cleanNumber.length < 10) {
+                errorDiv.textContent = 'Invalid phone number. Use country code (e.g., 2637...)';
+                return;
+            }
+
+            pairBtn.disabled = true;
+            pairBtn.innerHTML = '<span class="spinner"></span> Requesting...';
+            errorDiv.textContent = '';
+            resultDiv.style.display = 'none';
+            resultDiv.textContent = '';
+
+            try {
+                const response = await fetch('/code/pair', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ number: cleanNumber })
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Request failed');
+                
+                // Display the pairing code
+                const formattedCode = data.code.match(/.{1,4}/g)?.join('-') || data.code;
+                resultDiv.textContent = `🔑 Your pairing code:\n${formattedCode}`;
+                resultDiv.style.display = 'block';
+                pairBtn.innerHTML = '✅ Code Generated';
+                pairBtn.disabled = false;
+                
+                // Optional: Auto-select the code for easy copy
+                const range = document.createRange();
+                range.selectNode(resultDiv);
+                window.getSelection().removeAllRanges();
+                window.getSelection().addRange(range);
+                
+            } catch (err) {
+                errorDiv.textContent = `❌ ${err.message}`;
+                pairBtn.innerHTML = 'Try Again';
+                pairBtn.disabled = false;
+            }
+        });
+        
+        // Allow Enter key to submit
+        phoneInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                pairBtn.click();
+            }
+        });
+        
+        // Auto-focus on page load
+        phoneInput.focus();
+    </script>
+</body>
+</html>
